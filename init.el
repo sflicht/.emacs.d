@@ -131,11 +131,11 @@
 (use-package coffee-mode
   :straight t)
 
-(use-package swiper
-  :straight t
-  :bind
-  (("C-s" . swiper)
-   ("C-r" . swiper)))
+;; (use-package swiper
+;;   :straight t
+;;   :bind
+;;   (("C-s" . swiper)
+;;    ("C-r" . swiper)))
 
 (use-package typescript-mode
   :straight t
@@ -229,63 +229,21 @@
   (setq python-shell-interpreter "jupyter-console"
         python-shell-interpreter-args "--simple-prompt"
         python-shell-prompt-detect-failure-warning nil)
-  (add-to-list 'python-shell-completion-native-disabled-interpreters
-               "jupyter-console")
-  (add-to-list 'python-shell-completion-native-disabled-interpreters
-               "jupyter")
 
-  (defun fix-python-password-entry ()
-    (push
-     'comint-watch-for-password-prompt comint-output-filter-functions))
+  ;; (use-package buftra
+  ;;   :straight (:host github :repo "humitos/buftra.el"))
 
-  (defun my-setup-python (orig-fun &rest args)
-    "Use corresponding kernel"
-    (let* ((curr-python (car (split-string (pyenv--version-name) ":")))
-           (python-shell-buffer-name (concat "Python-" curr-python))
-           (python-shell-interpreter-args (if (bound-and-true-p djangonaut-mode)
-                                              "shell_plus -- --simple-prompt"
-                                            (concat "--simple-prompt --kernel=" curr-python)))
-           (python-shell-interpreter (if (bound-and-true-p djangonaut-mode)
-                                         "django-admin"
-                                       python-shell-interpreter)))
-      (apply orig-fun args)))
+  ;; (use-package py-pyment
+  ;;   :straight (:host github :repo "humitos/py-cmd-buffer.el")
+  ;;   :config
+  ;;   (setq py-pyment-options '("--output=numpydoc")))
 
-  (advice-add 'python-shell-get-process-name :around #'my-setup-python)
-  (advice-add 'python-shell-calculate-command :around #'my-setup-python)
-
-  (use-package pyenv
-    :straight (:host github :repo "aiguofer/pyenv.el")
-    :config
-    (setq pyenv-use-alias 't)
-    (setq pyenv-modestring-prefix " ")
-    (setq pyenv-modestring-postfix nil)
-    (setq pyenv-set-path nil)
-
-    (global-pyenv-mode)
-    (defun pyenv-update-on-buffer-switch (prev curr)
-      (if (and (string-equal "Python" (format-mode-line mode-name nil nil curr))
-               (not (cl-search ".pyenv/versions" (buffer-file-name))))
-          (progn
-            (pyenv-use-corresponding)
-            (pyvenv-activate (concat (pyenv--prefix) "/"))
-            )))
-    (add-hook 'switch-buffer-functions 'pyenv-update-on-buffer-switch)
-    )
-
-  (use-package buftra
-    :straight (:host github :repo "humitos/buftra.el"))
-
-  (use-package py-pyment
-    :straight (:host github :repo "humitos/py-cmd-buffer.el")
-    :config
-    (setq py-pyment-options '("--output=numpydoc")))
-
-  (use-package py-isort
-    :straight (:host github :repo "humitos/py-cmd-buffer.el")
-    :hook (python-mode . py-isort-enable-on-save)
-    ;; :config
-    ;; (setq py-isort-options '("-l=88" "--profile=black"))
-    )
+  ;; (use-package py-isort
+  ;;   :straight (:host github :repo "humitos/py-cmd-buffer.el")
+  ;;   :hook (python-mode . py-isort-enable-on-save)
+  ;;   ;; :config
+  ;;   ;; (setq py-isort-options '("-l=88" "--profile=black"))
+  ;;   )
 
   ;; (use-package py-autoflake
   ;;   :straight (:host github :repo "humitos/py-cmd-buffer.el")
@@ -293,16 +251,9 @@
   ;;   :config
   ;;   (setq py-autoflake-options '("--expand-star-imports")))
 
-  ;; (use-package py-docformatter
-  ;;   :straight (:host github :repo "humitos/py-cmd-buffer.el")
-  ;;   :hook (python-mode . py-docformatter-enable-on-save)
-  ;;   :config
-  ;;   (setq py-docformatter-options '("--wrap-summaries=88" "--pre-summary-newline")))
-
-
-  (use-package python-docstring
-    :straight t
-    :hook (python-mode . python-docstring-mode))
+  ;; (use-package python-docstring
+  ;;   :straight t
+  ;;   :hook (python-mode . python-docstring-mode))
 
   (use-package elpy
     :straight t
@@ -325,13 +276,6 @@
     (setq elpy-shell-echo-output nil)
     (setq elpy-rpc-python-command "python3")
     (setq elpy-rpc-timeout 2))
-
-  ;; (use-package djangonaut
-  ;;   :straight t
-  ;;   :config
-  ;;   (setq pythonic-interpreter "python")
-
-  ;;   (global-djangonaut-mode))
 
   (use-package jupyter
     :straight t
@@ -431,20 +375,20 @@
                 projectile-globally-ignored-files))
   )
 
-(use-package helm-projectile
-  :straight t
-  :bind
-  (("C-x C-f" . proj-open-file))
-  :init
-  (defun proj-open-file ()
-    "Open file using projectile if in project"
-    (interactive)
-    (if (projectile-project-p)
-        (helm-projectile)
-      (helm-for-files)))
-  :config
-  (setq projectile-completion-system 'helm)
-  (helm-projectile-on))
+;; (use-package helm-projectile
+;;   :straight t
+;;   :bind
+;;   (("C-x C-f" . proj-open-file))
+;;   :init
+;;   (defun proj-open-file ()
+;;     "Open file using projectile if in project"
+;;     (interactive)
+;;     (if (projectile-project-p)
+;;         (helm-projectile)
+;;       (helm-for-files)))
+;;   :config
+;;   (setq projectile-completion-system 'helm)
+;;   (helm-projectile-on))
 
 (use-package keyfreq
   :straight t
@@ -490,17 +434,17 @@
 (use-package sudo-edit
   :straight t)
 
-(use-package helm
-  :straight t
-  :diminish helm-mode
-  :bind
-  (("M-x" . helm-M-x)
-   ("M-y" . helm-show-kill-ring)
-   ("C-x b" . helm-mini)
-   ("C-c h o" . helm-occur))
-  :config
-  (helm-mode)
-  (helm-adaptive-mode))
+;; (use-package helm
+;;   :straight t
+;;   :diminish helm-mode
+;;   :bind
+;;   (("M-x" . helm-M-x)
+;;    ("M-y" . helm-show-kill-ring)
+;;    ("C-x b" . helm-mini)
+;;    ("C-c h o" . helm-occur))
+;;   :config
+;;   (helm-mode)
+;;   (helm-adaptive-mode))
 
 (use-package helm-pydoc
   :straight t
@@ -508,6 +452,76 @@
   (:map python-mode-map
         ("C-c C-d" . helm-pydoc))
   )
+
+;; (use-package marginalia
+;;   :straight t)
+
+;; (use-package vertico
+;;   :straight t
+;;   :init
+;;   ;; Grow and shrink the Vertico minibuffer
+;;   (setq vertico-resize t)
+
+;;   ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+;;   (setq vertico-cycle t)
+
+
+;;   (let* ((path (expand-file-name "straight/repos/vertico/extensions" user-emacs-directory))
+;;          (local-pkgs (mapcar 'file-name-directory (directory-files-recursively path ".*\\.el"))))
+;;     (if (file-accessible-directory-p path)
+;;         (Mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
+;;       (make-directory path :parents)))
+
+;;   )
+
+
+;; (use-package vertico-reverse
+;;   :after vertico
+;;   (vertico-reverse-mode))
+
+;; ;; Optionally use the `orderless' completion style. See
+;; ;; `+orderless-dispatch' in the Consult wiki for an advanced Orderless style
+;; ;; dispatcher. Additionally enable `partial-completion' for file path
+;; ;; expansion. `partial-completion' is important for wildcard support.
+;; ;; Multiple files can be opened at once with `find-file' if you enter a
+;; ;; wildcard. You may also give the `initials' completion style a try.
+;; (use-package orderless
+;;   :straight t
+;;   :init
+;;   ;; Configure a custom style dispatcher (see the Consult wiki)
+;;   ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+;;   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+;;   (setq completion-styles '(orderless)
+;;         completion-category-defaults nil
+;;         completion-category-overrides '((file (styles partial-completion)))))
+
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; Alternatively try `consult-completing-read-multiple'.
+  (defun crm-indicator (args)
+    (cons (concat "[CRM] " (car args)) (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
+
 
 (use-package tramp
   :init
